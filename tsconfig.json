@@ -1,0 +1,36 @@
+{
+  // most of the options are sourced from astrojs
+  "compilerOptions": {
+      // Enable top-level await, and other modern ESM features.
+      "target": "ESNext",
+      "module": "ESNext",
+
+      // Enable node-style module resolution, for things like npm package imports.
+      "moduleResolution": "node",
+
+      // Enable JSON imports.
+      "resolveJsonModule": true,
+
+      // Enable stricter transpilation for better output.
+      "isolatedModules": true,
+
+      // Report an error when importing a file using a casing different from the casing on disk.
+      "forceConsistentCasingInFileNames": true,
+
+      // Skip typechecking libraries and .d.ts files
+      "skipLibCheck": true,
+
+      // Error when a value import is only used as a type.
+      // "importsNotUsedAsValues": "error",
+
+
+      // \/ Project specific
+      "baseUrl": ".",
+      "esModuleInterop": true,
+      "types": ["node", "vite/client", "vue-sweetalert2"],
+
+      "paths": {
+          "@/*": ["src/*"],
+      }
+  }
+}
