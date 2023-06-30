@@ -3,10 +3,10 @@ import "./style.css";
 import App from "./App.vue";
 
 // -- Disable console logs in production
-if (import.meta.env.PROD) {
-  console.log = function () {};
-  console.debug = function () {};
-}
+// if (import.meta.env.PROD) {
+//   console.log = function () {};
+//   console.debug = function () {};
+// }
 
 // -- Measure app start time
 const appStart = Date.now();
