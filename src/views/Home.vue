@@ -402,7 +402,7 @@ function processRpyOrProjectSelect(event) {
 function rpyToBlocks(name: string, contents: string): string[][] {
     console.log("[ProcessRpyFile] File: %s | Len: %d", name, contents.length)
     // I fucking despise Windows
-    contents.replace(/\r\n/g, "\n");
+    contents = contents.replaceAll("\r\n", "\n");
 
 
     const lines = contents.split("\n");
