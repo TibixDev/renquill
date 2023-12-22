@@ -455,8 +455,10 @@ function convertBlocksToUnits(blocks: string[][]) {
             // const language = block[0].split(" ")[1];
             for (let i = 1; i < block.length; i += 3) {
                 const location = block[i];
-                const orig = block[i+1].split("old ")[1];
-                const translation = block[i+2].split("new ")[1];
+                const RENQUILL_MARKER_OLD = "__RENQUILL_MARKER_OLD__";
+                const RENQUILL_MARKER_NEW = "__RENQUILL_MARKER_NEW__";
+                const orig = block[i+1].replace("old", RENQUILL_MARKER_OLD).split(`${RENQUILL_MARKER_OLD} `)[1];
+                const translation = block[i+2].replace("new", RENQUILL_MARKER_NEW).split(`${RENQUILL_MARKER_NEW} `)[1];
                 const unit: TranslationUnit = { type: BlockType.StrBlock, location, orig, translation }
                 unitStore.push(unit);
             }
