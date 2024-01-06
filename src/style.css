@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.generic-hover {
+    @apply transition duration-200 hover:brightness-90;
+}

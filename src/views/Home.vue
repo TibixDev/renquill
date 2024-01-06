@@ -138,13 +138,34 @@
                         <button class="w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150" @click="closeProject()">Close Project</button>
                     </div>
                 </div>
-                <div id="tab-about" v-if="activeTab === Tabs.About" class="p-2">
-                    <div class="flex flex-row items-center gap-3">
-                        <img class="w-10 h-10" src="/renquill.png" alt="Renquill Logo">
-                        <h1 class="text-indigo-400 font-semibold text-4xl my-4">Renquill</h1>
+                <div id="tab-about" v-if="activeTab === Tabs.About" class="p-2 flex flex-col justify-between h-full">
+                    <div id="renquill-info">
+                        <div class="flex flex-row items-center gap-3">
+                            <img class="w-10 h-10" src="/renquill.png" alt="Renquill Logo">
+                            <h1 class="text-indigo-400 font-semibold text-4xl my-4">Renquill</h1>
+                        </div>
+                        <p class="font-mono mb-5 text-gray-400">Renquill v{{ APP_VER }} {{ IS_PROD ? 'PROD' : 'DEV' }}</p>
+                        <p class="mb-8 whitespace-normal">Renquill is an open-source app that helps you translate your<br> RenPy visual novels.</p>
+                        <div id="contribute">
+                            <h1 class="font-semibold text-2xl my-4">Contribute</h1>
+                            <a
+                                href="https://github.com/TibixDev/Renquill"
+                                target="_blank"
+                                class="w-max flex flex-row items-center justify-center gap-3 bg-black py-2 px-4 rounded-md border-2 generic-hover"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33c.85 0 1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+                                <span class="font-semibold">GitHub</span>
+                            </a>
+                        </div>
                     </div>
-                    <p class="font-bold">Copyright (c) 2023 - Present TibixDev</p>
-                    <p>Licensed using the MIT license</p>
+                    
+                    <div id="renquill-notice">
+                        <p class="text-[18px] text-gray-400 font-bold">Copyright (c) 2024 TibixDev</p>
+                        <p class="text-[18px] text-gray-400 ">Licensed under the MIT license</p>
+    
+                    </div>
+
+
                 </div>
             </div>
             <div id="tl-view" v-if="unitsWithinFile" class="p-5 h-screen max-h-screen overflow-y-auto w-full">
@@ -171,12 +192,12 @@
                                 </p>
                             </div>
                             <div 
-                                class="p-2 rounded-md"
+                                class="p-2 rounded-md flex flex-col"
                                 :class="isTranslated(tl?.translation) ? 'bg-green-500/30' : 'bg-red-500/30'"
                             >
                                 <p class="font-mono text-neutral-400 text-md">{{ tl.location }}</p>
                                 <textarea
-                                    class="text-white bg-transparent w-full"
+                                    class="text-white bg-transparent w-full h-full"
                                     spellcheck="false"
                                     v-model.lazy="tl.translation"
                                 ></textarea>
@@ -259,6 +280,9 @@ let projectData = $ref<Project>({
 
 // Constants
 const UNITS_PER_PAGE = 50;
+const APP_VER = __APP_VERSION__;
+const COMMIT_HASH = __COMMIT_HASH__;
+const IS_PROD = import.meta.env.PROD;
 
 // Reactive
 const isInProject = computed(() => Object.keys(projectData).filter(e => e != 'project').length > 0);
