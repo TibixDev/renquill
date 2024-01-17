@@ -444,10 +444,14 @@ function rpyToBlocks(name: string, contents: string): string[][] {
             }
             const blockStartPtr = currentBlockPtr;
             currentBlockPtr = i;
-            const block = lines
+            let block = lines
                 .slice(blockStartPtr - 1, currentBlockPtr - 1)
                 .filter(e => e != "\n" && e != "")
                 .map(e => e.trimStart())
+            
+            // If any lines start with "# TODO: Translation updated", cut them
+            // Fixes an issue with reexported translations
+            block.splice(block.findIndex(e => e.includes("# TODO: Translation updated")), 1);
             blockStore.push(block);
         }
     }
