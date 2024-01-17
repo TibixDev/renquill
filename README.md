@@ -126,9 +126,9 @@ We have Renquill hosted on Vercel [here](https://renquill.vercel.app/) for your 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Textareas should extend to at least the to-be-translated text height
-- [ ] The ability to merge different project files
-- [ ] The ability to update an existing project if the VN receives new strings
+- [x] Textareas should extend to at least the to-be-translated text height
+- [x] ~~The ability to merge different project files~~ (RenPy already does this)
+- [x] ~~The ability to update an existing project if the VN receives new strings~~ (RenPy already does this)
 - [ ] You tell me
 
 See the [open issues](https://github.com/TibixDev/Renquill/issues) for a full list of proposed features (and known issues).
