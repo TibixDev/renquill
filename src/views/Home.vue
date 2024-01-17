@@ -451,7 +451,9 @@ function rpyToBlocks(name: string, contents: string): string[][] {
             
             // If any lines start with "# TODO: Translation updated", cut them
             // Fixes an issue with reexported translations
-            block.splice(block.findIndex(e => e.includes("# TODO: Translation updated")), 1);
+            if (block.some(e => e.includes("# TODO: Translation updated"))) {
+                block.splice(block.findIndex(e => e.includes("# TODO: Translation updated")), 1);
+            }
             blockStore.push(block);
         }
     }
