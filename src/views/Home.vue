@@ -360,6 +360,7 @@ function processRpyOrProjectDrop(event) {
 function callRpyOrProjectSelectDialog() {
     const input = document.createElement('input');
     input.type = 'file';
+    input.multiple = true;
     input.onchange = (e: any) => { 
         processRpyOrProjectSelect(e);
     }
