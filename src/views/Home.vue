@@ -12,7 +12,7 @@
                 <img src="/renquill.png" alt="Renquill Logo" class="w-20 h-20">
                 <h1 class="text-5xl font-bold">Renquill</h1>
             </div>
-            <h1 class="text-4xl font-semibold text-center">Prepare for awesome things!</h1>
+            <h1 class="text-4xl font-semibold text-center">Prepare for awesome translations!</h1>
             <div
                 class="border-2 border-indigo-400
                        border-dashed py-24 px-12 rounded-md
@@ -131,11 +131,12 @@
                 </div>
                 <div id="tab-exports" v-if="activeTab === Tabs.Project" class="px-2 py-4">
                     <div class="flex flex-col gap-3">
-                        <button class="w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150" @click="saveProject()">Save Project</button>
-                        <button class="w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150" @click="logProject()">Debug Log</button>
-                        <button class="w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150" @click="exportProject()">Download Project File</button>
-                        <button class="w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150" @click="compileRpyBundle()">Export RenPy Bundle</button>
-                        <button class="w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150" @click="closeProject()">Close Project</button>
+                        <button class="rq-button" @click="saveProject()">💾 Save Project</button>
+                        <button class="rq-button" @click="toggleAutoSave()">💿 {{ autoSaveEnabled ? 'Disable' : 'Enable' }} Renquill Autosave</button>
+                        <button class="rq-button" @click="logProject()">🔧 Debug Log</button>
+                        <button class="rq-button" @click="exportProject()">⏬ Download Project File</button>
+                        <button class="rq-button" @click="compileRpyBundle()">📦 Export RenPy Bundle</button>
+                        <button class="rq-button" @click="closeProject()">❌ Close Project</button>
                     </div>
                 </div>
                 <div id="tab-about" v-if="activeTab === Tabs.About" class="p-2 flex flex-col justify-between h-full">
@@ -280,6 +281,7 @@ let projectData = $ref<Project>({
 
 // Constants
 const UNITS_PER_PAGE = 50;
+const AUTOSAVE_INTERVAL_TIME = 1000 * 60 * 2;
 const APP_VER = __APP_VERSION__;
 const COMMIT_HASH = __COMMIT_HASH__;
 const IS_PROD = import.meta.env.PROD;
@@ -294,12 +296,13 @@ let isCreatingProject = $ref(false);
 let savedProjects = $ref(null);
 let currentPage = $ref(0);
 let sidebarOpen = $ref(true);
+let autoSaveEnabled = $ref(false);
+let autoSaveInterval = null;
 
 onMounted(async () => {
     savedProjects = await get("projects");
-    console.log(savedProjects);
+    console.log("[onMounted] Saved projects", savedProjects);
 })
-
 
 function logProject() {
     console.log(projectData);
@@ -519,7 +522,7 @@ function importProject(data) {
     console.log("[ImportProject] Project '%s', ver. %f", proj.project.name, proj.project.version);
     console.log("[ImportProject] Imported valid project with %d keys", Object.keys(proj).length);
     projectData = proj;
-
+    enableAutoSaveIfRequested();
 }
 
 /**
@@ -536,6 +539,7 @@ function cancelProjectCreation() {
  */
 function finalizeProject() {
     isCreatingProject = false;
+    enableAutoSaveIfRequested();
 }
 
 /**
@@ -560,6 +564,7 @@ async function saveProject() {
  */
 async function loadProject(key) {
     projectData = await get(key);
+    enableAutoSaveIfRequested();
 }
 
 /**
@@ -570,6 +575,8 @@ async function closeProject() {
     selectedFile = null;
     savedProjects = await get("projects");
     activeTab = Tabs.Files;
+    destroyAutoSaveInterval();
+    autoSaveEnabled = false;
 }
 
 /**
@@ -662,6 +669,56 @@ function compileRpyBundle() {
 }
 
 /**
+ * Enables the auto save functionality if the user has enabled it permanently in the settings
+ */
+function enableAutoSaveIfRequested() {
+    if (autoSaveEnabled) {
+        console.warn("[enableAutoSaveIfRequested] Function called while autosave is already enabled, this may be a mistake")
+    }
+
+    if (localStorage.getItem("autosave") && localStorage.getItem("autosave") == "true") {
+        autoSaveEnabled = true;
+        createAutoSaveInterval();
+        console.log("[enableAutoSaveIfRequested] Invoked createAutoSaveInterval()")
+    }
+}
+
+/**
+ * Toggles the auto save between on and off, also manages the interval
+ */
+function toggleAutoSave() {
+    if (autoSaveEnabled) {
+        destroyAutoSaveInterval();
+        autoSaveEnabled = false;
+    } else {
+        createAutoSaveInterval();
+        autoSaveEnabled = true;
+    }
+    localStorage.setItem("autosave", String(autoSaveEnabled));
+}
+
+/**
+ * Create the auto save interval to run
+ */
+function createAutoSaveInterval() {
+    autoSaveInterval = setInterval(() => {
+        saveProject(); 
+    }, AUTOSAVE_INTERVAL_TIME);
+    console.log("[createAutoSaveInterval] Created autosave interval")
+}
+
+/**
+ * Destroys the autosave interval
+ */
+function destroyAutoSaveInterval() {
+    if (autoSaveInterval) {
+        clearInterval(autoSaveInterval);
+        autoSaveInterval = null;
+        console.log("[destroyAutoSaveInterval] Destroyed autosave interval")
+    }
+}
+
+/**
  * Produces a SweetAlert notification
  * @param msg - The message
  * @param icon - The icon
@@ -686,6 +743,10 @@ function swalNotification(msg, icon = 'success') {
 
 .tl-button-ol {
     @apply py-3 rounded-md text-indigo-500 border-2 border-indigo-500 w-fit px-6 hover:brightness-90 transition duration-150;
+}
+
+.rq-button {
+    @apply w-full py-2 bg-neutral-500 hover:bg-neutral-600 transition duration-150 rounded-md;
 }
 
 .gradient-bg {

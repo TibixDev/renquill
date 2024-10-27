@@ -25,11 +25,11 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #0284c7
+    background: rgb(129 140 248);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #0073ac;
+    background: rgb(106, 116, 209);
 }
 </style>
