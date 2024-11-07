@@ -1,8 +1,5 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import * as child from "child_process";
-
-const commitHash = child.execSync("git rev-parse --short HEAD").toString();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,6 +18,5 @@ export default defineConfig({
   },
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
-    '__COMMIT_HASH__': JSON.stringify(commitHash),
   }
 });

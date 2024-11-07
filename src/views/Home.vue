@@ -283,7 +283,6 @@ let projectData = $ref<Project>({
 const UNITS_PER_PAGE = 50;
 const AUTOSAVE_INTERVAL_TIME = 1000 * 60 * 2;
 const APP_VER = __APP_VERSION__;
-const COMMIT_HASH = __COMMIT_HASH__;
 const IS_PROD = import.meta.env.PROD;
 
 // Reactive
